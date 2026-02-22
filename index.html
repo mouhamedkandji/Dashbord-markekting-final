@@ -434,12 +434,13 @@ footer{text-align:center;padding:14px;font-size:10px;color:var(--faint);border-t
 <div id="authScreen">
 <div class="auth-wrap">
   <div class="auth-logo">
-        <div class="auth-logo-row" id="authLogoRow">
-      <!-- Logos dynamiques -->
+    <div class="auth-logo-row" id="authLogoRow" style="display:none"></div>
+    <div style="display:flex;justify-content:center;margin-bottom:16px">
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImdvbGRHcmFkIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6I2YwYzA0MDtzdG9wLW9wYWNpdHk6MSIgLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI1MCUiIHN0eWxlPSJzdG9wLWNvbG9yOiNmMGE4MzA7c3RvcC1vcGFjaXR5OjEiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6I2M5N2ExMDtzdG9wLW9wYWNpdHk6MSIgLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImRhcmtHcmFkIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IzBkMTAxODtzdG9wLW9wYWNpdHk6MSIgLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMWEyMDMwO3N0b3Atb3BhY2l0eToxIiAvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYm9yZGVyR3JhZCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiNmMGMwNDA7c3RvcC1vcGFjaXR5OjEiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6I2M5N2ExMDtzdG9wLW9wYWNpdHk6MC40IiAvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxmaWx0ZXIgaWQ9Imdsb3ciPgogICAgICA8ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSIzIiByZXN1bHQ9ImNvbG9yZWRCbHVyIi8+CiAgICAgIDxmZU1lcmdlPgogICAgICAgIDxmZU1lcmdlTm9kZSBpbj0iY29sb3JlZEJsdXIiLz4KICAgICAgICA8ZmVNZXJnZU5vZGUgaW49IlNvdXJjZUdyYXBoaWMiLz4KICAgICAgPC9mZU1lcmdlPgogICAgPC9maWx0ZXI+CiAgICA8ZmlsdGVyIGlkPSJzb2Z0Z2xvdyI+CiAgICAgIDxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjYiIHJlc3VsdD0iY29sb3JlZEJsdXIiLz4KICAgICAgPGZlTWVyZ2U+CiAgICAgICAgPGZlTWVyZ2VOb2RlIGluPSJjb2xvcmVkQmx1ciIvPgogICAgICAgIDxmZU1lcmdlTm9kZSBpbj0iU291cmNlR3JhcGhpYyIvPgogICAgICA8L2ZlTWVyZ2U+CiAgICA8L2ZpbHRlcj4KICA8L2RlZnM+CgogIDwhLS0gRm9uZCBjZXJjbGUgZXh0ZXJuZSAtLT4KICA8Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9Ijk2IiBmaWxsPSJ1cmwoI2RhcmtHcmFkKSIgLz4KCiAgPCEtLSBCb3JkdXJlIGRvcsOpZSAtLT4KICA8Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9Ijk2IiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjYm9yZGVyR3JhZCkiIHN0cm9rZS13aWR0aD0iMi41IiAvPgoKICA8IS0tIEJvcmR1cmUgaW50w6lyaWV1cmUgZmluZSAtLT4KICA8Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9Ijg4IiBmaWxsPSJub25lIiBzdHJva2U9IiNmMGE4MzAiIHN0cm9rZS13aWR0aD0iMC41IiBvcGFjaXR5PSIwLjMiIC8+CgogIDwhLS0gQWNjZW50IGFyYyBkw6ljb3JhdGlmIGhhdXQtZ2F1Y2hlIC0tPgogIDxwYXRoIGQ9Ik0gMzAgNzAgQSA4MCA4MCAwIDAgMSA3MCAzMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2dvbGRHcmFkKSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuNiIvPgoKICA8IS0tIEFjY2VudCBhcmMgZMOpY29yYXRpZiBiYXMtZHJvaXRlIC0tPgogIDxwYXRoIGQ9Ik0gMTcwIDEzMCBBIDgwIDgwIDAgMCAxIDEzMCAxNzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0idXJsKCNnb2xkR3JhZCkiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjYiLz4KCiAgPCEtLSBMZXR0cmUgTSAtLT4KICA8dGV4dAogICAgeD0iMzgiCiAgICB5PSIxMjciCiAgICBmb250LWZhbWlseT0iR2VvcmdpYSwgJ1RpbWVzIE5ldyBSb21hbicsIHNlcmlmIgogICAgZm9udC1zaXplPSI4MiIKICAgIGZvbnQtd2VpZ2h0PSI3MDAiCiAgICBmaWxsPSJ1cmwoI2dvbGRHcmFkKSIKICAgIGZpbHRlcj0idXJsKCNnbG93KSIKICAgIGxldHRlci1zcGFjaW5nPSItMiIKICA+TTwvdGV4dD4KCiAgPCEtLSBMZXR0cmUgSyAtLT4KICA8dGV4dAogICAgeD0iMTA1IgogICAgeT0iMTI3IgogICAgZm9udC1mYW1pbHk9Ikdlb3JnaWEsICdUaW1lcyBOZXcgUm9tYW4nLCBzZXJpZiIKICAgIGZvbnQtc2l6ZT0iODIiCiAgICBmb250LXdlaWdodD0iNzAwIgogICAgZmlsbD0idXJsKCNnb2xkR3JhZCkiCiAgICBmaWx0ZXI9InVybCgjZ2xvdykiCiAgICBsZXR0ZXItc3BhY2luZz0iLTIiCiAgPks8L3RleHQ+CgogIDwhLS0gTGlnbmUgZMOpY29yYXRpdmUgc291cyBsZXMgbGV0dHJlcyAtLT4KICA8bGluZSB4MT0iNDIiIHkxPSIxMzgiIHgyPSIxNTgiIHkyPSIxMzgiIHN0cm9rZT0idXJsKCNnb2xkR3JhZCkiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuNyIvPgoKICA8IS0tIFBvaW50cyBkw6ljb3JhdGlmcyBhdXggZXh0csOpbWl0w6lzIC0tPgogIDxjaXJjbGUgY3g9IjQyIiBjeT0iMTM4IiByPSIyLjUiIGZpbGw9IiNmMGE4MzAiIG9wYWNpdHk9IjAuOSIvPgogIDxjaXJjbGUgY3g9IjE1OCIgY3k9IjEzOCIgcj0iMi41IiBmaWxsPSIjZjBhODMwIiBvcGFjaXR5PSIwLjkiLz4KCiAgPCEtLSBQb2ludCBjZW50cmFsIGTDqWNvcmF0aWYgZW50cmUgTSBldCBLIC0tPgogIDxjaXJjbGUgY3g9IjEwMCIgY3k9IjEzOCIgcj0iMS41IiBmaWxsPSIjZjBjMDQwIiBvcGFjaXR5PSIwLjYiLz4KCiAgPCEtLSBQZXRpdHMgcG9pbnRzIGTDqWNvcmF0aWZzIGNvaW4gLS0+CiAgPGNpcmNsZSBjeD0iMTAwIiBjeT0iNTIiIHI9IjIiIGZpbGw9IiNmMGE4MzAiIG9wYWNpdHk9IjAuNSIgZmlsdGVyPSJ1cmwoI2dsb3cpIi8+CiAgPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTYwIiByPSIyIiBmaWxsPSIjZjBhODMwIiBvcGFjaXR5PSIwLjUiIGZpbHRlcj0idXJsKCNnbG93KSIvPgoKPC9zdmc+Cg==" style="height:80px;width:80px;border-radius:50%;box-shadow:0 0 24px rgba(240,168,48,.35)" alt="MK Logo"/>
     </div>
     </div>
-    <div class="auth-title">Dashboard Marketing Pro</div>
-    <div class="auth-sub" id="authSubtitle">Dashboard Marketing Pro · Plateforme collaborative</div>
+    <div class="auth-title" style="font-size:28px;letter-spacing:.01em">Mouhamed <span style="color:var(--gold)">KANDJI</span></div>
+    <div class="auth-sub" id="authSubtitle">Plateforme collaborative</div>
   </div>
   <div class="auth-card">
     <div class="auth-tabs">
@@ -2280,7 +2281,7 @@ function updateBrandText(){
   const parts = [BRAND.name1, BRAND.name2].filter(Boolean);
   const partnerStr = parts.length > 0 ? parts.join(" × ") + " · " : "";
   const authSub = document.getElementById("authSubtitle");
-  if(authSub) authSub.textContent = partnerStr + (BRAND.subtitle || "Plateforme collaborative");
+  if(authSub) authSub.textContent = BRAND.subtitle || "Plateforme collaborative";
 
   // Overview subtitle
   const ovSub = document.getElementById("ovSubtitle");
@@ -2454,7 +2455,7 @@ async function testBackend() {
   const statusEl = document.getElementById('backend-status');
   statusEl.innerHTML = `<div style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--purple)"><span class="spinner"></span> Test de connexion...</div>`;
   try {
-    const r = await fetch(`${ADS_BACKEND_URL}/`, { signal: AbortSignal.timeout(8000) });
+    const r = await fetch(`${ADS_BACKEND_URL}/`);
     const d = await r.json();
     if (d.status === 'ok') {
       statusEl.innerHTML = `<div style="background:rgba(15,204,160,.1);border:1px solid rgba(15,204,160,.25);border-radius:8px;padding:10px;font-size:11px">
@@ -2576,7 +2577,7 @@ async function fetchAds(platform) {
   const url = `${ADS_BACKEND_URL}${endpointMap[platform]}?${qs}`;
 
   try {
-    const r = await fetch(url, { signal: AbortSignal.timeout(30000) });
+    const r = await fetch(url);
     const data = await r.json();
     if (data.error) throw new Error(data.error);
     renderAdsMetrics(platform, data);
