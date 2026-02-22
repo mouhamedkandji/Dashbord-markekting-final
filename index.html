@@ -318,6 +318,21 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)!im
   .sname-inp{font-size:11px}
 }
 
+/* ── ADS CONNECT ── */
+.ads-status-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;transition:background .3s}
+.ads-metric-empty{font-size:11px;color:var(--muted);text-align:center;padding:20px 0;font-style:italic}
+.ads-metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px;margin-bottom:10px}
+.ads-metric-box{background:var(--s2);border:var(--bd);border-radius:8px;padding:10px;text-align:center}
+.ads-metric-val{font-size:15px;font-weight:800;margin-bottom:2px}
+.ads-metric-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.ads-camp-row{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--s2);border:var(--bd);border-radius:7px;margin-bottom:5px;gap:8px;flex-wrap:wrap}
+.ads-camp-name{font-size:11px;font-weight:600;flex:1;min-width:120px}
+.ads-camp-stat{font-size:10px;color:var(--muted);text-align:right}
+.ads-loader{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--purple);padding:12px 0}
+.ads-error{background:rgba(229,50,45,.08);border:1px solid rgba(229,50,45,.2);border-radius:8px;padding:12px;font-size:11px;color:#f87171;margin-top:8px}
+.ads-platform-card{transition:box-shadow .2s}
+.ads-platform-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.3)}
+
 /* ── PROCESS ── */
 .pf{display:flex;flex-direction:column}
 .pfstep{display:flex;align-items:flex-start}
@@ -527,6 +542,7 @@ footer{text-align:center;padding:14px;font-size:10px;color:var(--faint);border-t
   <div class="slbl">Navigation</div>
   <div class="ni on" data-v="overview" onclick="gv('overview',this)">📊 Vue Générale</div>
   <div class="ni" data-v="processus" onclick="gv('processus',this)">📋 Processus</div>
+  <div class="ni" data-v="adsconnect" onclick="gv('adsconnect',this)">🔌 Ads Connect</div>
   <div class="slbl" style="margin-top:6px">Campagnes</div>
   <div id="sideList"></div>
   <button class="btn-nc" onclick="openModal('mCamp')">＋ Nouvelle campagne</button>
@@ -726,6 +742,158 @@ footer{text-align:center;padding:14px;font-size:10px;color:var(--faint);border-t
     </div>
   </div>
 </div><!-- /v-camp -->
+
+<!-- ═══════════ ADS CONNECT VIEW ═══════════ -->
+<div class="view" id="v-adsconnect">
+  <div class="ptitle">🔌 Ads Connect</div>
+  <div class="psub">Connectez vos comptes publicitaires pour importer les données réelles</div>
+
+  <!-- Backend URL Config -->
+  <div class="card" style="border-top:2px solid var(--purple);margin-bottom:14px">
+    <div class="card-t">⚙️ Configuration Backend</div>
+    <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px">
+        <label class="mfl" style="display:block;margin-bottom:5px">URL de votre serveur backend</label>
+        <input class="mi" id="ads-backend-url" placeholder="http://localhost:3001 ou https://votre-app.railway.app" style="width:100%"/>
+      </div>
+      <button class="btn btn-ai" onclick="testBackend()" style="flex-shrink:0">🔍 Tester la connexion</button>
+    </div>
+    <div id="backend-status" style="margin-top:10px"></div>
+  </div>
+
+  <!-- Date Range -->
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-t">📅 Période d'analyse</div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <div>
+        <label class="mfl" style="display:block;margin-bottom:4px">Du</label>
+        <input type="date" class="mi" id="ads-date-from" style="width:160px"/>
+      </div>
+      <div>
+        <label class="mfl" style="display:block;margin-bottom:4px">Au</label>
+        <input type="date" class="mi" id="ads-date-to" style="width:160px"/>
+      </div>
+      <button class="btn btn-gold" onclick="fetchAllAds()" style="margin-top:18px">📥 Importer toutes les données</button>
+    </div>
+  </div>
+
+  <!-- 4 Platform Cards -->
+  <div class="g2" style="margin-bottom:14px">
+
+    <!-- META -->
+    <div class="card ads-platform-card" id="card-meta" style="border-top:2px solid #1877f2">
+      <div class="card-t" style="justify-content:space-between">
+        <span>📘 Meta Ads <span style="font-size:10px;color:var(--muted)">(Facebook & Instagram)</span></span>
+        <div style="display:flex;gap:5px;align-items:center">
+          <div class="ads-status-dot" id="dot-meta" style="background:var(--faint)"></div>
+          <button class="btn" style="background:#1877f2;color:#fff;font-size:10px;padding:4px 10px" onclick="fetchAds('meta')">Importer</button>
+        </div>
+      </div>
+      <div class="ads-metrics-grid" id="metrics-meta">
+        <div class="ads-metric-empty">Données non chargées — cliquez Importer</div>
+      </div>
+      <div id="ads-table-meta"></div>
+    </div>
+
+    <!-- GOOGLE -->
+    <div class="card ads-platform-card" id="card-google" style="border-top:2px solid #34a853">
+      <div class="card-t" style="justify-content:space-between">
+        <span>🔵 Google Ads</span>
+        <div style="display:flex;gap:5px;align-items:center">
+          <div class="ads-status-dot" id="dot-google" style="background:var(--faint)"></div>
+          <button class="btn" style="background:#34a853;color:#fff;font-size:10px;padding:4px 10px" onclick="fetchAds('google')">Importer</button>
+        </div>
+      </div>
+      <div class="ads-metrics-grid" id="metrics-google">
+        <div class="ads-metric-empty">Données non chargées — cliquez Importer</div>
+      </div>
+      <div id="ads-table-google"></div>
+    </div>
+
+    <!-- LINKEDIN -->
+    <div class="card ads-platform-card" id="card-linkedin" style="border-top:2px solid #0a66c2">
+      <div class="card-t" style="justify-content:space-between">
+        <span>💼 LinkedIn Ads</span>
+        <div style="display:flex;gap:5px;align-items:center">
+          <div class="ads-status-dot" id="dot-linkedin" style="background:var(--faint)"></div>
+          <button class="btn" style="background:#0a66c2;color:#fff;font-size:10px;padding:4px 10px" onclick="fetchAds('linkedin')">Importer</button>
+        </div>
+      </div>
+      <div class="ads-metrics-grid" id="metrics-linkedin">
+        <div class="ads-metric-empty">Données non chargées — cliquez Importer</div>
+      </div>
+      <div id="ads-table-linkedin"></div>
+    </div>
+
+    <!-- TIKTOK -->
+    <div class="card ads-platform-card" id="card-tiktok" style="border-top:2px solid #69C9D0">
+      <div class="card-t" style="justify-content:space-between">
+        <span>🎵 TikTok Ads</span>
+        <div style="display:flex;gap:5px;align-items:center">
+          <div class="ads-status-dot" id="dot-tiktok" style="background:var(--faint)"></div>
+          <button class="btn" style="background:#333;color:#69C9D0;border:1px solid #69C9D0;font-size:10px;padding:4px 10px" onclick="fetchAds('tiktok')">Importer</button>
+        </div>
+      </div>
+      <div class="ads-metrics-grid" id="metrics-tiktok">
+        <div class="ads-metric-empty">Données non chargées — cliquez Importer</div>
+      </div>
+      <div id="ads-table-tiktok"></div>
+    </div>
+
+  </div><!-- /g2 -->
+
+  <!-- Résumé agrégé toutes plateformes -->
+  <div class="card" id="ads-global-summary" style="display:none;border-top:2px solid var(--gold)">
+    <div class="card-t">🌍 Résumé global — Toutes plateformes</div>
+    <div class="gauto" id="ads-global-kpis"></div>
+    <div style="margin-top:14px" id="ads-global-table"></div>
+  </div>
+
+  <!-- Guide de démarrage -->
+  <div class="card" style="background:rgba(139,92,246,.05);border-color:rgba(139,92,246,.2)">
+    <div class="card-t">📖 Guide de démarrage rapide</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+      <div style="background:var(--s2);border:var(--bd);border-radius:10px;padding:12px">
+        <div style="font-size:11px;font-weight:700;color:var(--gold);margin-bottom:8px">① Déployer le backend</div>
+        <div style="font-size:10px;color:var(--muted);line-height:1.7">
+          1. Aller sur <a href="https://railway.app" target="_blank" style="color:var(--blue)">railway.app</a><br>
+          2. New Project → Deploy from GitHub<br>
+          3. Uploader le dossier <code style="background:var(--s3);padding:1px 5px;border-radius:3px">ads-backend</code><br>
+          4. Copier l'URL générée ici
+        </div>
+      </div>
+      <div style="background:var(--s2);border:var(--bd);border-radius:10px;padding:12px">
+        <div style="font-size:11px;font-weight:700;color:#1877f2;margin-bottom:8px">② Meta Business</div>
+        <div style="font-size:10px;color:var(--muted);line-height:1.7">
+          1. <a href="https://developers.facebook.com" target="_blank" style="color:var(--blue)">developers.facebook.com</a><br>
+          2. Créer App → Business<br>
+          3. Ajouter Marketing API<br>
+          4. System User Token → .env
+        </div>
+      </div>
+      <div style="background:var(--s2);border:var(--bd);border-radius:10px;padding:12px">
+        <div style="font-size:11px;font-weight:700;color:#34a853;margin-bottom:8px">③ Google Ads API</div>
+        <div style="font-size:10px;color:var(--muted);line-height:1.7">
+          1. <a href="https://console.cloud.google.com" target="_blank" style="color:var(--blue)">console.cloud.google.com</a><br>
+          2. Activer Google Ads API<br>
+          3. OAuth Playground → Refresh Token<br>
+          4. Developer Token → Centre API
+        </div>
+      </div>
+      <div style="background:var(--s2);border:var(--bd);border-radius:10px;padding:12px">
+        <div style="font-size:11px;font-weight:700;color:#0a66c2;margin-bottom:8px">④ LinkedIn + TikTok</div>
+        <div style="font-size:10px;color:var(--muted);line-height:1.7">
+          LinkedIn: <a href="https://linkedin.com/developers" target="_blank" style="color:var(--blue)">linkedin.com/developers</a><br>
+          → r_ads + r_ads_reporting<br><br>
+          TikTok: <a href="https://business.tiktok.com" target="_blank" style="color:var(--blue)">business.tiktok.com/portal/apps</a><br>
+          → ad.read + report.read
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /v-adsconnect -->
+
 </div><!-- /content -->
 </div><!-- /layout -->
 
@@ -1321,6 +1489,7 @@ function gv(name,el){
   if(el)el.classList.add("on");
   if(name==="overview"){renderOv();renderSide()}
   if(name==="processus"){renderGlobalProcess()}
+  if(name==="adsconnect"){initAdsConnect()}
 }
 function showTab(id,btn){
   document.querySelectorAll(".tcontent").forEach(t=>t.classList.remove("on"));
@@ -2245,6 +2414,219 @@ document.addEventListener("click",function(e){
     if(window.innerWidth<=768)closeSidebar();
   }
 });
+
+// ═══════════════════════════════════════════════════════
+// ADS CONNECT — Intégration Meta, Google, LinkedIn, TikTok
+// ═══════════════════════════════════════════════════════
+
+let ADS_BACKEND_URL = localStorage.getItem('ads_backend_url') || 'http://localhost:3001';
+const ADS_PLATFORM_COLORS = {
+  meta: '#1877f2',
+  google: '#34a853',
+  linkedin: '#0a66c2',
+  tiktok: '#69C9D0'
+};
+const ADS_PLATFORM_LABELS = {
+  meta: '📘 Meta',
+  google: '🔵 Google',
+  linkedin: '💼 LinkedIn',
+  tiktok: '🎵 TikTok'
+};
+
+function initAdsConnect() {
+  const urlInput = document.getElementById('ads-backend-url');
+  if (urlInput) urlInput.value = ADS_BACKEND_URL;
+  // Set default dates: last 30 days
+  const today = new Date().toISOString().split('T')[0];
+  const d30 = new Date(); d30.setDate(d30.getDate() - 30);
+  const from = d30.toISOString().split('T')[0];
+  const fromEl = document.getElementById('ads-date-from');
+  const toEl = document.getElementById('ads-date-to');
+  if (fromEl && !fromEl.value) fromEl.value = from;
+  if (toEl && !toEl.value) toEl.value = today;
+}
+
+async function testBackend() {
+  const urlInput = document.getElementById('ads-backend-url');
+  ADS_BACKEND_URL = (urlInput.value || '').trim().replace(/\/$/, '');
+  if (!ADS_BACKEND_URL) { showNotif('⚠️ Entrez l\'URL du backend','red'); return; }
+  localStorage.setItem('ads_backend_url', ADS_BACKEND_URL);
+  const statusEl = document.getElementById('backend-status');
+  statusEl.innerHTML = `<div style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--purple)"><span class="spinner"></span> Test de connexion...</div>`;
+  try {
+    const r = await fetch(`${ADS_BACKEND_URL}/`, { signal: AbortSignal.timeout(8000) });
+    const d = await r.json();
+    if (d.status === 'ok') {
+      statusEl.innerHTML = `<div style="background:rgba(15,204,160,.1);border:1px solid rgba(15,204,160,.25);border-radius:8px;padding:10px;font-size:11px">
+        <div style="color:var(--teal);font-weight:700;margin-bottom:4px">✅ Backend connecté avec succès !</div>
+        <div style="color:var(--muted)">Version ${d.version} · Plateformes: ${d.platforms.join(', ')}</div>
+      </div>`;
+      showNotif('✅ Backend connecté !', 'green');
+    } else {
+      throw new Error('Réponse inattendue');
+    }
+  } catch (e) {
+    statusEl.innerHTML = `<div class="ads-error">❌ Impossible de joindre le backend: ${e.message}<br><span style="color:var(--muted)">Vérifiez que le serveur est démarré et que l'URL est correcte.</span></div>`;
+  }
+}
+
+function setDotStatus(platform, status) {
+  const dot = document.getElementById(`dot-${platform}`);
+  if (!dot) return;
+  const colors = { ok: '#0fcca0', error: '#e5322d', loading: '#f0a830', idle: '#2a3450' };
+  dot.style.background = colors[status] || colors.idle;
+  dot.title = { ok: 'Connecté', error: 'Erreur', loading: 'Chargement...', idle: 'Non connecté' }[status] || '';
+}
+
+function renderAdsMetrics(platform, data) {
+  const metricsEl = document.getElementById(`metrics-${platform}`);
+  const tableEl = document.getElementById(`ads-table-${platform}`);
+  if (!metricsEl) return;
+
+  let campaigns = [];
+  let totals = { impressions: 0, clicks: 0, spend: 0, conversions: 0 };
+
+  if (platform === 'meta' && data.totals) {
+    // Summary endpoint
+    totals = data.totals;
+    metricsEl.innerHTML = renderMetricBoxes(totals, platform);
+    if (tableEl) tableEl.innerHTML = '';
+    return;
+  }
+
+  campaigns = data.campaigns || [];
+  campaigns.forEach(c => {
+    const ins = c.insights || {};
+    totals.impressions += ins.impressions || 0;
+    totals.clicks += ins.clicks || 0;
+    totals.spend += ins.spend || 0;
+    totals.conversions += (ins.conversions || ins.leads || 0);
+  });
+
+  metricsEl.innerHTML = renderMetricBoxes(totals, platform);
+
+  if (tableEl && campaigns.length > 0) {
+    tableEl.innerHTML = `
+      <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin:10px 0 6px">Campagnes (${campaigns.length})</div>
+      ${campaigns.slice(0, 8).map(c => {
+        const ins = c.insights || {};
+        const statusColor = (c.status === 'ACTIVE' || c.status === 'ENABLED') ? '#0fcca0' : '#5a6a8a';
+        return `<div class="ads-camp-row">
+          <div class="ads-camp-name">
+            <div style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${statusColor};margin-right:5px;vertical-align:middle"></div>
+            ${esc(c.name)}
+          </div>
+          <div class="ads-camp-stat">
+            <div>${(ins.impressions||0).toLocaleString('fr-FR')} impressions</div>
+            <div>${(ins.clicks||0).toLocaleString('fr-FR')} clics · ${fmtSpend(ins.spend||0)}</div>
+          </div>
+        </div>`;
+      }).join('')}
+      ${campaigns.length > 8 ? `<div style="text-align:center;font-size:10px;color:var(--muted);padding:6px">+${campaigns.length-8} autres campagnes</div>` : ''}
+    `;
+  } else if (tableEl) {
+    tableEl.innerHTML = `<div style="font-size:11px;color:var(--muted);padding:10px 0;font-style:italic">Aucune campagne active sur la période</div>`;
+  }
+}
+
+function renderMetricBoxes(totals, platform) {
+  const col = ADS_PLATFORM_COLORS[platform] || '#8b5cf6';
+  const ctr = totals.impressions > 0 ? ((totals.clicks/totals.impressions)*100).toFixed(2) : '0.00';
+  return `
+    <div class="ads-metric-box"><div class="ads-metric-val" style="color:${col}">${fmtBigNum(totals.impressions)}</div><div class="ads-metric-lbl">Impressions</div></div>
+    <div class="ads-metric-box"><div class="ads-metric-val" style="color:${col}">${fmtBigNum(totals.clicks)}</div><div class="ads-metric-lbl">Clics</div></div>
+    <div class="ads-metric-box"><div class="ads-metric-val" style="color:var(--gold)">${fmtSpend(totals.spend)}</div><div class="ads-metric-lbl">Dépenses</div></div>
+    <div class="ads-metric-box"><div class="ads-metric-val" style="color:var(--teal)">${ctr}%</div><div class="ads-metric-lbl">CTR</div></div>
+    ${totals.conversions > 0 ? `<div class="ads-metric-box"><div class="ads-metric-val" style="color:var(--purple)">${fmtBigNum(totals.conversions)}</div><div class="ads-metric-lbl">Conversions</div></div>` : ''}
+  `;
+}
+
+function fmtBigNum(n) {
+  if (!n) return '0';
+  if (n >= 1e6) return (n/1e6).toFixed(1)+'M';
+  if (n >= 1e3) return (n/1e3).toFixed(1)+'K';
+  return n.toLocaleString('fr-FR');
+}
+function fmtSpend(n) {
+  if (!n) return '0 €';
+  return parseFloat(n).toLocaleString('fr-FR', { style:'currency', currency:'EUR', maximumFractionDigits:0 });
+}
+
+async function fetchAds(platform) {
+  ADS_BACKEND_URL = (document.getElementById('ads-backend-url')?.value || ADS_BACKEND_URL).trim().replace(/\/$/, '');
+  localStorage.setItem('ads_backend_url', ADS_BACKEND_URL);
+
+  const dateFrom = document.getElementById('ads-date-from')?.value || '';
+  const dateTo = document.getElementById('ads-date-to')?.value || '';
+  const metricsEl = document.getElementById(`metrics-${platform}`);
+  const tableEl = document.getElementById(`ads-table-${platform}`);
+
+  if (metricsEl) metricsEl.innerHTML = `<div class="ads-loader"><span class="spinner"></span> Chargement des données ${ADS_PLATFORM_LABELS[platform]}...</div>`;
+  if (tableEl) tableEl.innerHTML = '';
+  setDotStatus(platform, 'loading');
+
+  // Choose endpoint
+  const endpointMap = {
+    meta: '/api/meta/summary',
+    google: '/api/google/campaigns',
+    linkedin: '/api/linkedin/campaigns',
+    tiktok: '/api/tiktok/campaigns'
+  };
+  const qs = new URLSearchParams({date_from: dateFrom, date_to: dateTo}).toString();
+  const url = `${ADS_BACKEND_URL}${endpointMap[platform]}?${qs}`;
+
+  try {
+    const r = await fetch(url, { signal: AbortSignal.timeout(30000) });
+    const data = await r.json();
+    if (data.error) throw new Error(data.error);
+    renderAdsMetrics(platform, data);
+    setDotStatus(platform, 'ok');
+    showNotif(`✅ ${ADS_PLATFORM_LABELS[platform]} importé !`, 'green');
+    updateGlobalSummary();
+  } catch (e) {
+    setDotStatus(platform, 'error');
+    if (metricsEl) metricsEl.innerHTML = `<div class="ads-error">❌ ${e.message}<br><span style="color:var(--muted)">Vérifiez votre backend et vos clés API dans le fichier .env</span></div>`;
+    showNotif(`⚠️ Erreur ${ADS_PLATFORM_LABELS[platform]}: ${e.message}`, 'red');
+  }
+}
+
+async function fetchAllAds() {
+  showNotif('📥 Import de toutes les plateformes...', 'blue');
+  await Promise.all(['meta', 'google', 'linkedin', 'tiktok'].map(p => fetchAds(p)));
+}
+
+function updateGlobalSummary() {
+  // Collect all loaded data from metric boxes
+  const summaryEl = document.getElementById('ads-global-summary');
+  const kpisEl = document.getElementById('ads-global-kpis');
+  if (!summaryEl || !kpisEl) return;
+
+  // Check if any platform is loaded
+  const platforms = ['meta','google','linkedin','tiktok'];
+  const anyLoaded = platforms.some(p => {
+    const dot = document.getElementById(`dot-${p}`);
+    return dot && dot.style.background.includes('15, 204, 160');
+  });
+
+  if (anyLoaded) {
+    summaryEl.style.display = 'block';
+    kpisEl.innerHTML = platforms.map(p => {
+      const dot = document.getElementById(`dot-${p}`);
+      const loaded = dot && dot.style.background.includes('15, 204, 160');
+      const col = ADS_PLATFORM_COLORS[p];
+      // Read metric values from rendered metric boxes
+      const metricEl = document.getElementById(`metrics-${p}`);
+      const vals = metricEl ? [...metricEl.querySelectorAll('.ads-metric-val')].map(el => el.textContent.trim()) : [];
+      return `<div class="k" style="--ka:${col}">
+        <div class="kl" style="color:${col}">${ADS_PLATFORM_LABELS[p]}</div>
+        <div class="kv" style="color:${col}">${loaded ? (vals[2]||'—') : '—'}</div>
+        <div class="ks">${loaded ? `${vals[0]||'0'} imp. · ${vals[1]||'0'} clics` : 'Non chargé'}</div>
+      </div>`;
+    }).join('');
+  } else {
+    summaryEl.style.display = 'none';
+  }
+}
 
 // ── INIT ──
 document.getElementById("dateLbl").textContent=new Date().toLocaleDateString("fr-FR",{day:"2-digit",month:"long",year:"numeric"});
